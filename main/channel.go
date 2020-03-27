@@ -8,14 +8,37 @@ func Count(ch chan int) {
 }
 
 func main() {
-	chs := make([] chan int, 10)
+	chs := initChan2().([]chan int)
 
 	for i := 0; i < 10; i++ {
-		chs[i] = make(chan int)
 		go Count(chs[i])
 	}
 
-	for _, ch := range (chs) {
-		fmt.Println(<-ch)
+	for i, ch := range chs {
+		fmt.Printf("i: %d v: %d \n", i, <-ch)
 	}
+}
+
+func initChan2() interface{} {
+	chs := []chan int{
+		make(chan int),
+		make(chan int),
+		make(chan int),
+		make(chan int),
+		make(chan int),
+		make(chan int),
+		make(chan int),
+		make(chan int),
+		make(chan int),
+		make(chan int),
+	}
+	return chs
+}
+
+func initChan() interface{} {
+	chs := make([]chan int, 10)
+	for i := range chs {
+		chs[i] = make(chan int)
+	}
+	return chs
 }
