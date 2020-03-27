@@ -1,9 +1,9 @@
 package main
 
 import (
-	"sync"
 	"fmt"
 	"runtime"
+	"sync"
 )
 
 var counter = 0
@@ -27,7 +27,7 @@ func main() {
 		c := counter
 		lock.Unlock()
 		runtime.Gosched()
-		if (c > 10) {
+		if c > 10 {
 			break
 		}
 	}

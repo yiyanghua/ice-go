@@ -12,11 +12,11 @@ type Host interface {
 
 // types.ClusterManager
 type clusterManager struct {
-	name 	string
-	mux     sync.Mutex
+	name string
+	mux  sync.Mutex
 }
 
-func (cm *clusterManager) test()  {
+func (cm *clusterManager) test() {
 
 }
 
@@ -29,7 +29,7 @@ type A struct {
 	clusterManager
 }
 
-func main()  {
-	a :=&A{}
+func main() {
+	a := &A{}
 	a.Health("aa")
 }
