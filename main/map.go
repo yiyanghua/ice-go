@@ -1,20 +1,33 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
-type PersonInfo struct {
-	ID string
-	Name string
+type TestFun func(url string) string
+
+type DefaultFactory struct {
+	Test map[string]TestFun
 }
 
-func main()  {
-	var personDb map[string] PersonInfo
-	personDb = make(map[string] PersonInfo)
+func (factory *DefaultFactory) registry(key string, fun TestFun) {
+	factory.Test[key] = fun
+}
 
-	personDb["sd"] = PersonInfo{"sd","sd"}
+func main() {
 
-	if person, ok := personDb["sd"]; ok{
-		fmt.Println(person)
+	m := make(map[string]TestFun, 1)
+	factory := DefaultFactory{Test: m}
+
+	factory.registry("1111", func(url string) string {
+		return strings.Join([]string{"http://", url}, "")
+	})
+
+	test := "www.github.com"
+	if testFun, ok := factory.Test["1111"]; ok {
+		value := testFun(test)
+		fmt.Printf(value)
 	}
 
 }
