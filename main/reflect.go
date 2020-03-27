@@ -54,8 +54,6 @@ func main() {
 
 	f := reflect.ValueOf(&b).Elem()
 	f.FieldByName("Name").SetString("yy")
-	b2 := f.Interface().(Bird)
-	b2.Name = "yy"
 	fmt.Println(b,f.Interface().(Bird))
 
 }
