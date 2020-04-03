@@ -43,4 +43,15 @@ func watch(ctx context.Context) {
 			time.Sleep(2 * time.Second)
 		}
 	}
+	/**
+	switch frame := model.(type) {
+	case *Request:
+		return encodeRequest(ctx, frame)
+	case *Response:
+		return encodeResponse(ctx, frame)
+	default:
+		log.Proxy.Errorf(ctx, "[protocol][bolt] encode with unknown command : %+v", model)
+		return nil, xprotocol.ErrUnknownType
+	}
+	 */
 }
