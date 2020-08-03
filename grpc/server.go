@@ -2,6 +2,7 @@ package main
 
 import (
 	"ice-go/inf"
+	"io"
 	"log"
 	"net"
 	"runtime"
@@ -16,6 +17,8 @@ const (
 )
 
 type Data struct{}
+
+
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -39,4 +42,26 @@ func (t *Data) GetUser(ctx context.Context, request *inf.UserRq) (response *inf.
 		Name: strconv.Itoa(int(request.Id)) + ":test",
 	}
 	return response, err
+}
+
+
+func (t *Data) Channel(stream inf.Data_ChannelServer) error {
+	for {
+		args, err := stream.Recv()
+		if err != nil {
+			if err == io.EOF {
+				return nil
+			}
+			return err
+		}
+
+		reply := &inf.UserRp{
+			Name: strconv.Itoa(int(args.Id)) + ":test",
+		}
+
+		err = stream.Send(reply)
+		if err != nil {
+			return err
+		}
+	}
 }

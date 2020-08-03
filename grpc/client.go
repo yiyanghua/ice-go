@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"ice-go/inf"
+	"io"
 	"log"
 	"runtime"
 	"strconv"
@@ -28,7 +30,7 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	currTime := time.Now()
 
-	//并行请求
+/*	//并行请求
 	for i := 0; i < parallel; i++ {
 		wg.Add(1)
 		go func() {
@@ -36,7 +38,9 @@ func main() {
 			exe()
 		}()
 	}
-	wg.Wait()
+	wg.Wait()*/
+
+	stream()
 
 	log.Printf("time taken: %.2f ", time.Now().Sub(currTime).Seconds())
 }
@@ -47,6 +51,44 @@ func exe() {
 	defer conn.Close()
 	client := inf.NewDataClient(conn)
 	getUser(client)
+}
+
+func stream()  {
+	//建立连接
+	conn, _ := grpc.Dial(server + ":41005",grpc.WithInsecure())
+	defer conn.Close()
+	client := inf.NewDataClient(conn)
+
+	stream, err := client.Channel(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go func() {
+		for {
+			var request inf.UserRq
+			r := rand.Intn(parallel)
+			request.Id = int32(r)
+
+			if err := stream.Send(&request); err != nil {
+				log.Fatal(err)
+			}
+			time.Sleep(time.Second)
+		}
+	}()
+
+
+
+	for {
+		reply, err := stream.Recv()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			log.Fatal(err)
+		}
+		fmt.Println(reply.Name)
+	}
 }
 
 func getUser(client inf.DataClient) {

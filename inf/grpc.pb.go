@@ -132,10 +132,13 @@ var file_grpc_proto_rawDesc = []byte{
 	0x66, 0x22, 0x18, 0x0a, 0x06, 0x55, 0x73, 0x65, 0x72, 0x52, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69,
 	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x02, 0x69, 0x64, 0x22, 0x1c, 0x0a, 0x06, 0x55,
 	0x73, 0x65, 0x72, 0x52, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x32, 0x2b, 0x0a, 0x04, 0x44, 0x61, 0x74,
+	0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x32, 0x54, 0x0a, 0x04, 0x44, 0x61, 0x74,
 	0x61, 0x12, 0x23, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x12, 0x0b, 0x2e, 0x69,
 	0x6e, 0x66, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x71, 0x1a, 0x0b, 0x2e, 0x69, 0x6e, 0x66, 0x2e,
-	0x55, 0x73, 0x65, 0x72, 0x52, 0x70, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x55, 0x73, 0x65, 0x72, 0x52, 0x70, 0x12, 0x27, 0x0a, 0x07, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65,
+	0x6c, 0x12, 0x0b, 0x2e, 0x69, 0x6e, 0x66, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x71, 0x1a, 0x0b,
+	0x2e, 0x69, 0x6e, 0x66, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x70, 0x28, 0x01, 0x30, 0x01, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -157,9 +160,11 @@ var file_grpc_proto_goTypes = []interface{}{
 }
 var file_grpc_proto_depIdxs = []int32{
 	0, // 0: inf.Data.GetUser:input_type -> inf.UserRq
-	1, // 1: inf.Data.GetUser:output_type -> inf.UserRp
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 1: inf.Data.Channel:input_type -> inf.UserRq
+	1, // 2: inf.Data.GetUser:output_type -> inf.UserRp
+	1, // 3: inf.Data.Channel:output_type -> inf.UserRp
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -229,6 +234,7 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type DataClient interface {
 	GetUser(ctx context.Context, in *UserRq, opts ...grpc.CallOption) (*UserRp, error)
+	Channel(ctx context.Context, opts ...grpc.CallOption) (Data_ChannelClient, error)
 }
 
 type dataClient struct {
@@ -248,9 +254,41 @@ func (c *dataClient) GetUser(ctx context.Context, in *UserRq, opts ...grpc.CallO
 	return out, nil
 }
 
+func (c *dataClient) Channel(ctx context.Context, opts ...grpc.CallOption) (Data_ChannelClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Data_serviceDesc.Streams[0], "/inf.Data/Channel", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &dataChannelClient{stream}
+	return x, nil
+}
+
+type Data_ChannelClient interface {
+	Send(*UserRq) error
+	Recv() (*UserRp, error)
+	grpc.ClientStream
+}
+
+type dataChannelClient struct {
+	grpc.ClientStream
+}
+
+func (x *dataChannelClient) Send(m *UserRq) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *dataChannelClient) Recv() (*UserRp, error) {
+	m := new(UserRp)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // DataServer is the server API for Data service.
 type DataServer interface {
 	GetUser(context.Context, *UserRq) (*UserRp, error)
+	Channel(Data_ChannelServer) error
 }
 
 // UnimplementedDataServer can be embedded to have forward compatible implementations.
@@ -259,6 +297,9 @@ type UnimplementedDataServer struct {
 
 func (*UnimplementedDataServer) GetUser(context.Context, *UserRq) (*UserRp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (*UnimplementedDataServer) Channel(Data_ChannelServer) error {
+	return status.Errorf(codes.Unimplemented, "method Channel not implemented")
 }
 
 func RegisterDataServer(s *grpc.Server, srv DataServer) {
@@ -283,6 +324,32 @@ func _Data_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Data_Channel_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(DataServer).Channel(&dataChannelServer{stream})
+}
+
+type Data_ChannelServer interface {
+	Send(*UserRp) error
+	Recv() (*UserRq, error)
+	grpc.ServerStream
+}
+
+type dataChannelServer struct {
+	grpc.ServerStream
+}
+
+func (x *dataChannelServer) Send(m *UserRp) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *dataChannelServer) Recv() (*UserRq, error) {
+	m := new(UserRq)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 var _Data_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "inf.Data",
 	HandlerType: (*DataServer)(nil),
@@ -292,6 +359,13 @@ var _Data_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Data_GetUser_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Channel",
+			Handler:       _Data_Channel_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "grpc.proto",
 }
