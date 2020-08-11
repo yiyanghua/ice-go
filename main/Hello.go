@@ -8,13 +8,14 @@ func main()  {
 	h1 := &it.Hello1{
 		Name: "1",
 	}
-	hh1 := interface{}(*h1).(it.Hello)
+	var hh1 it.Hello = h1
+
 
 
 	h2 := &it.Hello2{
 		Name: "2",
 	}
-	hh2 := interface{}(*h2).(it.Hello)
+	var hh2 it.Hello = h2
 
 
 	s := make([]*it.Hello, 0)
