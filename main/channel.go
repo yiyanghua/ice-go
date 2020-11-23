@@ -42,3 +42,19 @@ func initChan() interface{} {
 	}
 	return chs
 }
+
+func initChan3()  {
+	flag := make(chan bool)
+
+	go func() {
+		flag <- true
+		a :=<-flag
+		fmt.Printf("1 %v\n", a)
+	}()
+
+	go func() {
+		a := <-flag
+		flag <- false
+		fmt.Printf("2 %v",a)
+	}()
+}
