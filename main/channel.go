@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func Count(ch chan int) {
 	ch <- 1
@@ -44,6 +46,8 @@ func initChan() interface{} {
 }
 
 func initChan3()  {
+	// 无缓冲通道的特点是，发送的数据需要被**读取后**，发送才会完成
+
 	flag := make(chan bool)
 
 	go func() {
