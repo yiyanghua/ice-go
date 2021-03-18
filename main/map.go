@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"sync"
 )
 
 type TestFun func(url string) string
@@ -29,5 +30,16 @@ func main() {
 		value := testFun(test)
 		fmt.Printf(value)
 	}
+
+
+	// sync map
+	var counter = struct{
+		sync.RWMutex
+		m map[string]int
+	}{m: make(map[string]int)}
+
+	counter.Lock()
+	counter.m["1"] =1
+	counter.Unlock()
 
 }
