@@ -1,13 +1,13 @@
 package main
 
 import (
-	"ice-go/inf"
 	"io"
 	"log"
 	"net"
 	"runtime"
 	"strconv"
 
+	"github.com/yiyanghua/ice/inf"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -17,8 +17,6 @@ const (
 )
 
 type Data struct{}
-
-
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -35,7 +33,6 @@ func main() {
 	log.Println("grpc server in: %s", port)
 }
 
-
 // 定义方法
 func (t *Data) GetUser(ctx context.Context, request *inf.UserRq) (response *inf.UserRp, err error) {
 	response = &inf.UserRp{
@@ -43,7 +40,6 @@ func (t *Data) GetUser(ctx context.Context, request *inf.UserRq) (response *inf.
 	}
 	return response, err
 }
-
 
 func (t *Data) Channel(stream inf.Data_ChannelServer) error {
 	for {

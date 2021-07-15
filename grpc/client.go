@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"ice-go/inf"
 	"io"
 	"log"
 	"runtime"
@@ -13,6 +12,7 @@ import (
 
 	"math/rand"
 
+	"github.com/yiyanghua/ice/inf"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -22,23 +22,23 @@ var (
 )
 
 const (
-	server      = "127.0.0.1"
-	parallel    = 5        //连接并行度
+	server   = "127.0.0.1"
+	parallel = 5 //连接并行度
 )
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	currTime := time.Now()
 
-/*	//并行请求
-	for i := 0; i < parallel; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			exe()
-		}()
-	}
-	wg.Wait()*/
+	/*	//并行请求
+		for i := 0; i < parallel; i++ {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				exe()
+			}()
+		}
+		wg.Wait()*/
 
 	stream()
 
@@ -47,15 +47,15 @@ func main() {
 
 func exe() {
 	//建立连接
-	conn, _ := grpc.Dial(server + ":41005",grpc.WithInsecure())
+	conn, _ := grpc.Dial(server+":41005", grpc.WithInsecure())
 	defer conn.Close()
 	client := inf.NewDataClient(conn)
 	getUser(client)
 }
 
-func stream()  {
+func stream() {
 	//建立连接
-	conn, _ := grpc.Dial(server + ":41005",grpc.WithInsecure())
+	conn, _ := grpc.Dial(server+":41005", grpc.WithInsecure())
 	defer conn.Close()
 	client := inf.NewDataClient(conn)
 
@@ -76,8 +76,6 @@ func stream()  {
 			time.Sleep(time.Second)
 		}
 	}()
-
-
 
 	for {
 		reply, err := stream.Recv()
@@ -102,7 +100,7 @@ func getUser(client inf.DataClient) {
 	if id, _ := strconv.Atoi(strings.Split(response.Name, ":")[0]); id != r {
 		log.Printf("response error  %#v", response)
 	} else {
-		log.Printf("response %#v",response)
+		log.Printf("response %#v", response)
 	}
 
 }
