@@ -2,44 +2,47 @@ package main
 
 import (
 	"fmt"
-	"strings"
-	"sync"
+	"log"
+	"os"
 )
 
-type TestFun func(url string) string
-
-type DefaultFactory struct {
-	Test map[string]TestFun
+type Person struct {
+	age int
 }
 
-func (factory *DefaultFactory) registry(key string, fun TestFun) {
-	factory.Test[key] = fun
+func (p Person) howOld() int {
+	return p.age
+}
+
+func (p *Person) growUp() {
+	p.age += 1
 }
 
 func main() {
+	// qcrao 是值类型
+	qcrao := Person{age: 18}
 
-	m := make(map[string]TestFun, 1)
-	factory := DefaultFactory{Test: m}
+	// 值类型 调用接收者也是值类型的方法
+	fmt.Println(qcrao.howOld())
 
-	factory.registry("1111", func(url string) string {
-		return strings.Join([]string{"http://", url}, "")
-	})
+	// 值类型 调用接收者是指针类型的方法
+	qcrao.growUp()
+	fmt.Println(qcrao.howOld())
 
-	test := "www.github.com"
-	if testFun, ok := factory.Test["1111"]; ok {
-		value := testFun(test)
-		fmt.Printf(value)
-	}
+	// ----------------------
 
+	// stefno 是指针类型
+	stefno := &Person{age: 100}
 
-	// sync map
-	var counter = struct{
-		sync.RWMutex
-		m map[string]int
-	}{m: make(map[string]int)}
+	// 指针类型 调用接收者是值类型的方法
+	fmt.Println(stefno.howOld())
 
-	counter.Lock()
-	counter.m["1"] =1
-	counter.Unlock()
+	// 指针类型 调用接收者也是指针类型的方法
+	stefno.growUp()
+	fmt.Println(stefno.howOld())
 
+	var f, _ = os.Open("dd")
+	log.SetOutput(f)
+
+	log.Println("")
 }

@@ -2,29 +2,48 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
+type future struct {
+	result string
+}
+
+var f chan future
+
+func fuc() chan future {
+	return f
+}
+
 func main() {
-	stop := make(chan bool)
+	var t <-chan time.Time
+	t = time.After(time.Second * 1)
 
 	go func() {
 		for {
 			select {
-			case <-stop:
-				fmt.Println("监控退出，停止了...")
+			case d := <-t:
+				fmt.Println(d.Second())
+			case r := <-fuc():
+				fmt.Println(r.result)
 				return
 			default:
-				fmt.Println("goroutine监控中...")
-				time.Sleep(2 * time.Second)
+				//fmt.Println("default")
 			}
 		}
 	}()
 
-	time.Sleep(10 * time.Second)
-	fmt.Println("可以了，通知监控停止")
-	stop <- true
-	//为了检测监控过是否停止，如果没有监控输出，就表示停止了
-	time.Sleep(5 * time.Second)
+	time.Sleep(time.Second * 2)
+	f = make(chan future, 1)
+	s := future{
+		result: "aa",
+	}
+	f <- s
 
+	quitChan := make(chan os.Signal, 1)
+	signal.Notify(quitChan, os.Kill, os.Interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	<-quitChan
 }

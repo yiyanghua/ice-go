@@ -1,4 +1,4 @@
-module github.com/yiyanghua/ice
+module github.com/yiyanghua/ice-go
 
 go 1.16
 

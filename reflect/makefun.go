@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-func testMakeFunc(count int)  {
+func testMakeFunc(count int) {
 	sum := 0
-	for i := 0; i< count; i++ {
+	for i := 0; i < count; i++ {
 		sum += 1
 	}
 	fmt.Println(sum)

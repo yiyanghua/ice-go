@@ -12,7 +12,7 @@ import (
 
 	"math/rand"
 
-	"github.com/yiyanghua/ice/inf"
+	"github.com/yiyanghua/ice-go/grpc/inf"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )

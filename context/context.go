@@ -53,5 +53,5 @@ func watch(ctx context.Context) {
 		log.Proxy.Errorf(ctx, "[protocol][bolt] encode with unknown command : %+v", model)
 		return nil, xprotocol.ErrUnknownType
 	}
-	 */
+	*/
 }

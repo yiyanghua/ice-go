@@ -1,6 +1,6 @@
 package it
 
-type  Hello1 struct{
+type Hello1 struct {
 	Name string
 }
 

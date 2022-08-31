@@ -3,26 +3,28 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
-func main()  {
-	defer func() {
-		if err := recover();  err != nil {
-			fmt.Printf("sss")
-		}
-	}()
-
-
+func main() {
 	go func() {
-		c :=make(chan int,1)
+		defer func() {
+			fmt.Println("111")
+			if err := recover(); err != nil {
+				fmt.Println("sss")
+			}
+		}()
+		c := make(chan int, 1)
 		c <- 1
 		close(c)
-		//close(c)
-		panic(errors.New("ss"))
+		panic(errors.New("sfs"))
 	}()
 
-	for {
-		fmt.Print("")
-	}
-
+	// wait
+	quitCh := make(chan os.Signal, 1)
+	signal.Notify(quitCh, os.Kill, os.Interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	fmt.Println("dddd")
+	<-quitCh
 }
