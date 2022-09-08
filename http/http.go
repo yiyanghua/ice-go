@@ -20,9 +20,10 @@ func main() {
 	mx := http.NewServeMux()
 	n := &name{}
 	mx.Handle("/aa", n)
+	//http.ListenAndServe(":8080", mx)
 
 	http.HandleFunc("/hf", hf)
-	http.Handle("aa", http.HandlerFunc(hf))
+	http.Handle("/aa", http.HandlerFunc(hf))
 
 	http.ListenAndServe(":8080", nil)
 }
