@@ -29,8 +29,8 @@ https://mp.weixin.qq.com/s?__biz=MzA4ODg0NDkzOA==&mid=2247487027&amp;idx=1&amp;s
 */
 func main() {
 	b := Bird{"Sparrow", 3}
-	v := reflect.ValueOf(b)
 	t := reflect.TypeOf(b)
+	v := reflect.ValueOf(b)
 
 	// 通过值反射拿到
 	fmt.Println(t) // type
@@ -50,8 +50,13 @@ func main() {
 	e.Name = "xx"
 	fmt.Println(b, e)
 
+	/**
+	用 reflect.ValueOf 获取变量指针；
+	调用 reflect.Value.Elem 获取指针指向的变量；
+	调用 reflect.Value.SetInt 更新变量的值
+	*/
 	f := reflect.ValueOf(&b).Elem()
+	i := f.Interface()
 	f.FieldByName("Name").SetString("yy")
-	fmt.Println(b, f.Interface().(Bird))
-
+	fmt.Println(b, f.Interface().(Bird), i)
 }
