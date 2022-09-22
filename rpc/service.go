@@ -71,7 +71,11 @@ func (s *service) registerMethods() {
 		if mType.Out(0) != reflect.TypeOf((*error)(nil)).Elem() {
 			continue
 		}
+
 		argType, replyType := mType.In(1), mType.In(2)
+		if !isExportedOrBuiltinType(argType) || !isExportedOrBuiltinType(replyType) {
+			continue
+		}
 		s.method[method.Name] = &methodType{
 			method:    method,
 			ArgType:   argType,
@@ -85,6 +89,13 @@ func (s *service) call(m *methodType, argv, replyv reflect.Value) error {
 	atomic.AddUint64(&m.numCalls, 1)
 	f := m.method.Func
 
-	m.method.Func.Call()
+	returnValues := f.Call([]reflect.Value{s.revr, argv, replyv})
+	if errInter := returnValues[0].Interface(); errInter != nil {
+		return errInter.(error)
+	}
 	return nil
+}
+
+func isExportedOrBuiltinType(t reflect.Type) bool {
+	return ast.IsExported(t.Name()) || t.PkgPath() == ""
 }
