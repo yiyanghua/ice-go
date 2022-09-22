@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/yiyanghua/ice-go/rpc/codec"
+	"ice-go/rpc/codec"
 	"io"
 	"log"
 	"net"
