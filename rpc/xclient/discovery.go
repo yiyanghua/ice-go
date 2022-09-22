@@ -26,7 +26,7 @@ var _ Discovery = (*MultiServersDiscovery)(nil)
 
 type MultiServersDiscovery struct {
 	r       *rand.Rand
-	mu      *sync.RWMutex
+	mu      sync.RWMutex
 	servers []string
 	index   int
 }
@@ -62,7 +62,7 @@ func (d *MultiServersDiscovery) Get(mode SelectMode) (string, error) {
 }
 
 func (d *MultiServersDiscovery) GetAll() ([]string, error) {
-	d.mu.Lock()
+	d.mu.RLock()
 	defer d.mu.RUnlock()
 	servers := make([]string, len(d.servers), len(d.servers))
 	copy(servers, d.servers)
@@ -73,6 +73,7 @@ func NewMultiServerDiscovery(servers []string) *MultiServersDiscovery {
 	d := &MultiServersDiscovery{
 		servers: servers,
 		r:       rand.New(rand.NewSource(time.Now().UnixNano())),
+		mu:      sync.RWMutex{},
 	}
 	d.index = d.r.Intn(math.MaxInt32 - 1)
 	return d

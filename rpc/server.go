@@ -42,7 +42,7 @@ var DefaultServer = NewServer()
 
 func (server *Server) ServeConn(conn io.ReadWriteCloser) {
 	var opt Option
-	if err := json.NewDecoder(conn).Decode(opt); err != nil {
+	if err := json.NewDecoder(conn).Decode(&opt); err != nil {
 		log.Println("rpc server: options error", err)
 	}
 	if opt.MagicNumber != MagicNumber {

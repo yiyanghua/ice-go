@@ -23,9 +23,9 @@ func (m *methodType) newArgv() reflect.Value {
 	// arg may be a pointer type, or a value type
 	//todo 获取这个指针指向的元素类型，等效于对指针类型变量做了一个*操作
 	if m.ArgType.Kind() == reflect.Ptr {
-		argv = reflect.New(m.ArgType).Elem()
-	} else {
 		argv = reflect.New(m.ArgType.Elem())
+	} else {
+		argv = reflect.New(m.ArgType).Elem()
 	}
 	return argv
 }
@@ -57,7 +57,8 @@ func newService(revr interface{}) *service {
 	if !ast.IsExported(s.name) {
 		log.Fatalf("rpc server:%s is not a valid service name", s.name)
 	}
-	return nil
+	s.registerMethods()
+	return s
 }
 
 func (s *service) registerMethods() {
