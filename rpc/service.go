@@ -32,7 +32,7 @@ func (m *methodType) newArgv() reflect.Value {
 
 func (m *methodType) newReplyv() reflect.Value {
 	// reply must be a pointer type
-	replyv := reflect.New(m.ReplyType).Elem()
+	replyv := reflect.New(m.ReplyType.Elem())
 	switch m.ReplyType.Elem().Kind() {
 	case reflect.Map:
 		replyv.Elem().Set(reflect.MakeMap(m.ReplyType.Elem()))
