@@ -2,7 +2,9 @@ package rpc
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"ice-go/rpc/codec"
 	"io"
@@ -277,7 +279,7 @@ func Dial(network, address string, opts ...*Option) (*Client, error) {
 
 // NewHTTPClient new a Client instance via HTTP as transport protocol
 func NewHTTPClient(conn net.Conn, opt *Option) (*Client, error) {
-	_, _ = io.WriteString(conn, fmt.Sprintf("CONNECT %s HTTP/1.0\n\n", defaultRPCPath))
+	_, _ = io.WriteString(conn, fmt.Sprintf("CONNECT %s HTTP/1.0\n\n", defaultRpcPath))
 
 	// Require successful HTTP response
 	// before switching to RPC protocol.
