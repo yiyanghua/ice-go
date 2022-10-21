@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/yiyanghua/ice-go/poly/it"
+	"ice-go/poly/it"
 )
 
 func main() {
