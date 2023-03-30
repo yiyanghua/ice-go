@@ -6,10 +6,11 @@ type s string
 
 func main() {
 	// https://www.slideshare.net/haoel/go-programming-patterns
-	a := make([]int,32)
+	a := make([]int, 32)
 	b := a[1:16]
-	a = append(a,1)
-	a[2] =42
+	// 扩容后，使用新地址
+	a = append(a, 1)
+	a[2] = 42
 
 	fmt.Println(b[0])
 	fmt.Println(b[1])
