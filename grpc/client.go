@@ -12,9 +12,9 @@ import (
 
 	"math/rand"
 
-	"github.com/yiyanghua/ice-go/grpc/inf"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"ice-go/grpc/inf"
 )
 
 var (
