@@ -24,6 +24,7 @@ func init() {
 		println(err)
 	}
 }
+
 func testPanic() {
 	panic("test panic")
 }
