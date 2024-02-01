@@ -13,13 +13,13 @@ func main() {
 		defer func() {
 			fmt.Println("111")
 			if err := recover(); err != nil {
-				fmt.Println("sss")
+				fmt.Println("sss", err)
 			}
 		}()
 		c := make(chan int, 1)
 		c <- 1
 		close(c)
-		panic(errors.New("sfs"))
+		panic(errors.New("sfs return panic"))
 	}()
 
 	// wait

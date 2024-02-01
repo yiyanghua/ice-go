@@ -43,5 +43,6 @@ func do(uri string) string {
 func main() {
 	fmt.Println(get("https://www.baidu.com/"))
 	fmt.Println("--------------------------------")
+
 	fmt.Println(do("www.baidu.com"))
 }
