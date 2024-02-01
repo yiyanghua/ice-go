@@ -26,6 +26,11 @@ func init() {
 }
 
 func testPanic() {
+	/*defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("sss", err)
+		}
+	}()*/
 	panic("test panic")
 }
 
